@@ -1,7 +1,7 @@
 package com.thoughtworks.assignment.trainroute;
 
 import java.lang.Boolean;
-import java.lang.String;import java.lang.System;
+import java.lang.String;
 import java.util.*;
 
 /**
@@ -220,7 +220,7 @@ public class RouteMap {
         while (!stationStack.isEmpty()) {
             sb.append(stationStack.pop().getLabel()).append("->");
         }
-        return sb.toString() + calculatedWeight;
+        return sb.toString() + "#" + calculatedWeight;
     }
 
     /**

@@ -1,0 +1,17 @@
+out/
+.DS_Store
+.project
+.classpath
+.dependencies
+*.class
+bin/
+.idea
+.settings
+.gradle
+classes
+build
+
+#idea related files
+editorial-module.iml
+editorial-module.ipr
+editorial-module.iws
