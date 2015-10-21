@@ -206,6 +206,87 @@ public class RouteMap {
         return null;
     }
 
+    public int tripDistance(List<Station> stations) throws TrainRouteException{
+        if (stations == null) {
+            throw new TrainRouteException("No station provided to calculate distance", 21001);
+        }
+
+        if (stations.size() == 1) {
+            throw new TrainRouteException("Atleast two stations must be provided", 21002);
+        }
+
+        Station source = stations.get(0);
+        int edgeWeight = 0;
+        Station prevStation = source;
+        for (Station s:stations) {
+            if (!s.equals(source)) {
+                if (adjMatrix[prevStation.getIndexNo()][s.getIndexNo()] != 0) {
+                    edgeWeight = edgeWeight + adjMatrix[prevStation.getIndexNo()][s.getIndexNo()];
+                    prevStation = s;
+                } else {
+                    throw new TrainRouteException("Path not found", 21000);
+                }
+            }
+        }
+        return edgeWeight;
+    }
+
+    public List<List<Station>> getStops(Station source, Station destination) {
+        List<List<Station>> retList =  new ArrayList<List<Station>>();
+        Queue<Station> stationQ = new LinkedList<Station>();
+
+        for (int i=0;i<adjMatrix[source.getIndexNo()].length;i++) {
+            if (adjMatrix[source.getIndexNo()][i] > 0) {
+                stationQ.add(stationList.get(i));
+            }
+        }
+
+        while (!stationQ.isEmpty()) {
+            Station curr = stationQ.remove();
+            List<Station> stops = new ArrayList<Station>();
+            isDestinationFound(stops, curr, destination);
+            retList.add(stops);
+        }
+        return retList;
+    }
+
+    public List<List<Station>> getStops(Station source, Station destination, int maxStops) {
+        List<List<Station>> retList =  new ArrayList<List<Station>>();
+        Queue<Station> stationQ = new LinkedList<Station>();
+
+        for (int i=0;i<adjMatrix[source.getIndexNo()].length;i++) {
+            if (adjMatrix[source.getIndexNo()][i] > 0) {
+                stationQ.add(stationList.get(i));
+            }
+        }
+
+        while (!stationQ.isEmpty()) {
+            Station curr = stationQ.remove();
+            List<Station> stops = new ArrayList<Station>();
+            isDestinationFound(stops, curr, destination);
+            if (stops.size() <= maxStops) {
+                retList.add(stops);
+            }
+        }
+        return retList;
+    }
+
+    private void isDestinationFound(List<Station> stationStops, Station currStation, Station dest) {
+        stationStops.add(currStation);
+        if(currStation.equals(dest)) {
+            return;
+        }
+
+        for (int i=0;i<adjMatrix[currStation.getIndexNo()].length;i++) {
+            if (adjMatrix[currStation.getIndexNo()][i] > 0) {
+                isDestinationFound(stationStops, stationList.get(i), dest);
+                if (stationList.get(i).equals(dest)) {
+                    return;
+                }
+            }
+        }
+    }
+
     public void BFS(Station root) {
         Queue q = new LinkedList();
         root.setWasVisited(Boolean.TRUE);

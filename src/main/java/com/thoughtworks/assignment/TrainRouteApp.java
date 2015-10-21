@@ -2,6 +2,7 @@ package com.thoughtworks.assignment;
 
 import com.thoughtworks.assignment.trainroute.Station;
 import com.thoughtworks.assignment.trainroute.RouteMap;
+import com.thoughtworks.assignment.trainroute.TrainRouteException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +82,19 @@ public class TrainRouteApp {
         routeMap.calculatePath();
 
         System.out.println(routeMap.getShortestPath(A, F));
+
+        List<Station> pathFor = new ArrayList<Station>();
+        pathFor.add(A);
+        pathFor.add(B);
+        pathFor.add(D);
+        try {
+            System.out.println(routeMap.tripDistance(pathFor));
+        } catch (TrainRouteException e) {
+            System.out.println(e.getErrorMessage());
+        }
         System.out.println("Done");
     }
+
+
 
 }
