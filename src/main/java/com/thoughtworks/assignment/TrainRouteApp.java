@@ -52,12 +52,12 @@ public class TrainRouteApp {
 //        routeMap.addDistance(D, F, 2);
 
         /* Set 3 */
-        routeMap.addDistance(A, B, 3);
-        routeMap.addDistance(B, C, 4);
-        routeMap.addDistance(C, D, 2);
-        routeMap.addDistance(C, F, 3);
-        routeMap.addDistance(D, E, 5);
-        routeMap.addDistance(E, F, 6);
+//        routeMap.addDistance(A, B, 3);
+//        routeMap.addDistance(B, C, 4);
+//        routeMap.addDistance(C, D, 2);
+//        routeMap.addDistance(C, F, 3);
+//        routeMap.addDistance(D, E, 5);
+//        routeMap.addDistance(E, F, 6);
 
         routeMap.setStartStation(A);
         routeMap.calculatePath();
@@ -71,14 +71,14 @@ public class TrainRouteApp {
 
         Station D1 = new Station("D1");
         routeMap.addStation(D1);
-        routeMap.addDistance(A, B, 3);
-        routeMap.addDistance(B, C, 4);
-        routeMap.addDistance(C, D, 2);
-        routeMap.addDistance(D, E, 5);
-        routeMap.addDistance(E, F, 6);
-
-        routeMap.addDistance(D, D1, 1);
-        routeMap.addDistance(D1, F, 3);
+//        routeMap.addDistance(A, B, 3);
+//        routeMap.addDistance(B, C, 4);
+//        routeMap.addDistance(C, D, 2);
+//        routeMap.addDistance(D, E, 5);
+//        routeMap.addDistance(E, F, 6);
+//
+//        routeMap.addDistance(D, D1, 1);
+//        routeMap.addDistance(D1, F, 3);
         routeMap.calculatePath();
 
         System.out.println(routeMap.getShortestPath(A, F));

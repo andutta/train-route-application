@@ -1,7 +1,14 @@
 package com.thoughtworks.assignment.trainroute;
 
 /**
- * Created by anshumandutta on 10/19/15.
+ * This class represent a station that has been visited
+ * while calculating the shortest path algorithm. An instance
+ * of this class is created and added/updated to a HashMap
+ * when edge weight is calculated.
+ *
+ * @author anshumandutta
+ * @version 1.0
+ * @since 10/13/15
  */
 public class Visit {
     private Integer edgeWeight;

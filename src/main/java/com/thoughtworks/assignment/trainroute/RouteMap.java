@@ -1,10 +1,18 @@
 package com.thoughtworks.assignment.trainroute;
 
-import java.lang.Boolean;import java.lang.Integer;import java.lang.String;import java.lang.System;
+import java.lang.Boolean;
+import java.lang.String;import java.lang.System;
 import java.util.*;
 
 /**
- * Created by anshumandutta on 10/13/15.
+ * This class implements a graph data structure for any list of Train stations.
+ * Vertices represent a station and edges represent the distance between the station, note that,
+ * this class assumes that the graph data will represent a directed graph.
+ * This class is not tested in a multi-threaded environment and may not be thread safe.
+ *
+ * @author anshumandutta
+ * @version 1.0
+ * @since 10/13/15
  */
 public class RouteMap {
 
@@ -13,61 +21,76 @@ public class RouteMap {
     private Map<String, Visit> visits;
     private Queue<Station> q;
     private int adjMatrix[][];
-    private int vertexCount;
+    private int stationCount;
     private Station startStation;
 
+    /**
+     * Getter method of StartStation attribute
+     * @return Station instance
+     */
     public Station getStartStation() {
         return startStation;
     }
 
+    /**
+     * Setter method for setting startStation attribute
+     * @param startStation instance of start station object
+     */
     public void setStartStation(Station startStation) {
         this.startStation = startStation;
     }
 
-    private void initRouteMap() {
-        visits = new HashMap<String, Visit>();
-        q = new LinkedList<Station>();
-
-        adjMatrix = new int[vertexCount][vertexCount];
-
-        for (int i = 0; i < vertexCount; i++) {
-            for (int j = 0; j < vertexCount; j++) {
-                adjMatrix[i][j] = 0;
-            }
-        }
-
-        //Reset all visited station
-        for (Station s:stationList) {
-            s.setWasVisited(Boolean.FALSE);
-        }
-    }
-
+    /**
+     * This is constructor method for this class.
+     *
+     * @param inList List of stations/vertices
+     */
     public RouteMap(List<Station> inList) {
         stationList = new ArrayList<Station>();
-        vertexCount = 0;
+        stationCount = 0;
         int i=0;
         for (Station s:inList) {
             s.setIndexNo(i);
             this.stationList.add(s);
             i++;
-            vertexCount++;
+            stationCount++;
         }
         initRouteMap();
     }
 
+    /**
+     * This method is for adding new station to the graph.
+     *
+     * @param v New station object
+     */
     public void addStation(Station v) {
-        v.setIndexNo(vertexCount++);
+        v.setIndexNo(stationCount++);
         stationList.add(v);
         initRouteMap();
     }
 
+    /**
+     * This method is for adding an edge between two stations.
+     *
+     * @param node1 index no for source station
+     * @param node2 index no for destination station
+     * @param edgeVal distance between two station
+     */
     public void addEdge(int node1, int node2, int edgeVal) {
         adjMatrix[node1][node2] = edgeVal;
         initRouteMap();
     }
 
-    //Ideally this method should throw an Exception if the index is not found
-    public boolean addDistance(Station source, Station dest, int distance) {
+
+    /**
+     * This method is for adding an edge between two stations by using station object.
+     *
+     * @param source Source Station object
+     * @param dest Destination Station object
+     * @param distance distance between two station
+     * @throws TrainRouteException
+     */
+    public void addDistance(Station source, Station dest, int distance) throws TrainRouteException {
         int sourceIndex=-1;
         int destIndex=-1;
         for (Station s:stationList) {
@@ -85,16 +108,25 @@ public class RouteMap {
         }
 
         if (sourceIndex == -1 || destIndex == -1) {
-            return false;
+            throw new TrainRouteException("Source station or destination station not found", 21005);
         }
 
         adjMatrix[sourceIndex][destIndex] = distance;
-        return true;
     }
 
 
+    /**
+     * This method calculates shortest path between two station and prepares a
+     * visit data structure holding the route to the shorted path.
+     * Method uses Dijkstra's shortest path algorithm to calculate the path.
+     * The process Starts with a source node and relaxes the joining nodes by
+     * calculating the edge weight (which represent distance here) and updates
+     * a Map that holds all the vertices and their last calculated minimum
+     * weight.
+     * Note that this method assumes that start station is already set by the
+     * user of this class.
+     */
     public void calculatePath() {
-
         //No calculation to be done is start station not set, ideally should throw exception
         if (startStation == null) {
             return;
@@ -113,6 +145,8 @@ public class RouteMap {
         //Relax nodes
         Station currStation = startStation;
         while (true) {
+
+            //Get the nearest station attached to current station, also build a queue hold every station connection to current station
             int minIndex = getMinNode(currStation); // this also sets the queue for the child nodes
             if (minIndex == -1) {
                 break;
@@ -123,11 +157,14 @@ public class RouteMap {
             if ((visits.get(currStation.getLabel()) != null)) {
                 Visit lastVisit = visits.get(currStation.getLabel());
                 if (lastVisit.getEdgeWeight() != INFINITY) {
-                    initEdgeWeight = lastVisit.getEdgeWeight();
+                    initEdgeWeight = lastVisit.getEdgeWeight(); // Get previous weight if was already visited
                 }
 
             }
 
+            //Iterate over all the attached nodes to current station,
+            //e.g for a A->B=7, A->E=10, during first iteration queue q will have B and E in it
+            //with minIndex value of B as it is smallest between B and E
             while (!q.isEmpty()) {
                 Station relaxNode = q.remove();
                 if (visits.get(relaxNode.getLabel()) != null) {
@@ -144,6 +181,22 @@ public class RouteMap {
         }
     }
 
+    /**
+     * This method returns the shortest path between two stations.
+     * Method uses a Hashmap that is already populated with calculated
+     * shortest path for each vertices.
+     * Each station from destination is inspected and its previous
+     * station is identified and added to a stack until the source station
+     * is found. Once done, method simply pops each element from the stack
+     * to build the path.
+     *
+     * Note that method calculatePath() must be called before calling
+     * this method.
+     *
+     * @param source Source Station
+     * @param dest Destination Station
+     * @return A String of station labels followng the shortest path.
+     */
     public String getShortestPath(Station source, Station dest) {
         Stack<Station> stationStack = new Stack<Station>();
         Station tmpDest = dest;
@@ -170,42 +223,15 @@ public class RouteMap {
         return sb.toString() + calculatedWeight;
     }
 
-    private int getMinNode(Station source) {
-        int retIndex = -1;
-        if (source.getWasVisited()) {
-            return retIndex;
-        }
-        int minValue = INFINITY;
-        for (int i=0;i<adjMatrix[source.getIndexNo()].length;i++) {
-            if (adjMatrix[source.getIndexNo()][i] > 0) {
-                if (minValue > adjMatrix[source.getIndexNo()][i]) {
-                    minValue = adjMatrix[source.getIndexNo()][i];
-                    retIndex = i;
-                }
-                q.add(stationList.get(i));
-            }
-        }
-
-        return retIndex;
-    }
-
-    private Station getUnvisitedChild(Station v) {
-        int data[] = adjMatrix[v.getIndexNo()];
-        if (data != null ) {
-            for (int i=0;i<data.length;i++) {
-                if (data[i] > 0) {
-                    Station child = stationList.get(i);
-                    if (!child.getWasVisited()) {
-                        return child;
-                    }
-                }
-
-            }
-        }
-
-        return null;
-    }
-
+    /**
+     * This method calculates the total distance for a list of stations.
+     *
+     * @param stations List of station
+     * @return Total Distance combined for all the stations
+     * @throws TrainRouteException 21001, when no station is passed in,
+     * 21002 when less than two station provided, 21000, when path is not found
+     *
+     */
     public int tripDistance(List<Station> stations) throws TrainRouteException{
         if (stations == null) {
             throw new TrainRouteException("No station provided to calculate distance", 21001);
@@ -231,7 +257,15 @@ public class RouteMap {
         return edgeWeight;
     }
 
-    public List<List<Station>> getStops(Station source, Station destination) {
+    /**
+     * This methods returns all the possible station combinations
+     * between source and destination station.
+     *
+     * @param source Source Station
+     * @param destination destination Station
+     * @return List of station combinations as a list
+     */
+    public List<List<Station>> getAllStops(Station source, Station destination) {
         List<List<Station>> retList =  new ArrayList<List<Station>>();
         Queue<Station> stationQ = new LinkedList<Station>();
 
@@ -250,6 +284,15 @@ public class RouteMap {
         return retList;
     }
 
+    /**
+     * This method returns all station combinations with a defined
+     * maximum number of stop
+     *
+     * @param source Source station
+     * @param destination destination station
+     * @param maxStops Criteria for maximum number of stop
+     * @return List of station combinations as a list
+     */
     public List<List<Station>> getStops(Station source, Station destination, int maxStops) {
         List<List<Station>> retList =  new ArrayList<List<Station>>();
         Queue<Station> stationQ = new LinkedList<Station>();
@@ -271,6 +314,25 @@ public class RouteMap {
         return retList;
     }
 
+    private int getMinNode(Station source) {
+        int retIndex = -1;
+        if (source.getWasVisited()) {
+            return retIndex;
+        }
+        int minValue = INFINITY;
+        for (int i=0;i<adjMatrix[source.getIndexNo()].length;i++) {
+            if (adjMatrix[source.getIndexNo()][i] > 0) {
+                if (minValue > adjMatrix[source.getIndexNo()][i]) {
+                    minValue = adjMatrix[source.getIndexNo()][i];
+                    retIndex = i;
+                }
+                q.add(stationList.get(i));
+            }
+        }
+
+        return retIndex;
+    }
+
     private void isDestinationFound(List<Station> stationStops, Station currStation, Station dest) {
         stationStops.add(currStation);
         if(currStation.equals(dest)) {
@@ -287,29 +349,22 @@ public class RouteMap {
         }
     }
 
-    public void BFS(Station root) {
-        Queue q = new LinkedList();
-        root.setWasVisited(Boolean.TRUE);
-        q.add(root);
-        printNode(root);
+    private void initRouteMap() {
+        visits = new HashMap<String, Visit>();
+        q = new LinkedList<Station>();
 
-        while(!q.isEmpty()) {
-            Station vN = (Station) q.remove();
-            Station child = null;
-            while ((child = getUnvisitedChild(vN)) != null) {
-                child.setWasVisited(Boolean.TRUE);
-                printNode(vN, child);
-                q.add(child);
+        adjMatrix = new int[stationCount][stationCount];
+
+        for (int i = 0; i < stationCount; i++) {
+            for (int j = 0; j < stationCount; j++) {
+                adjMatrix[i][j] = 0;
             }
         }
-    }
 
-    private void printNode(Station v) {
-        System.out.print(v.getLabel() + " -> ");
-    }
-
-    private void printNode(Station s, Station d) {
-        System.out.println(s.getLabel() + " -> " + d.getLabel());
+        //Reset all visited station
+        for (Station s:stationList) {
+            s.setWasVisited(Boolean.FALSE);
+        }
     }
 
 }

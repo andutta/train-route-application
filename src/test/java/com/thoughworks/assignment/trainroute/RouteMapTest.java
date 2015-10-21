@@ -1,4 +1,4 @@
-package com.thoughtworks.assignment;
+package com.thoughworks.assignment.trainroute;
 
 import com.thoughtworks.assignment.trainroute.RouteMap;
 import com.thoughtworks.assignment.trainroute.Station;
@@ -126,7 +126,7 @@ public class RouteMapTest {
 
     @Test
     public void getStopTest_C_C() {
-        List<List<Station>> data = routeMap.getStops(C, C);
+        List<List<Station>> data = routeMap.getStops(C, C, 3);
         HashMap<String, String> result = new HashMap<String, String>();
         for (List<Station> stations:data) {
             StringBuilder sb = new StringBuilder();
@@ -141,22 +141,42 @@ public class RouteMapTest {
     }
 
     @Test
-    public void getStopTest_A_D() {
-        List<List<Station>> data = routeMap.getStops(A, D);
-        Assert.assertEquals(4, data.size());
+    public void getStopTest_A_C() {
+        List<List<Station>> data = routeMap.getAllStops(A, C);
+        Assert.assertEquals(3, data.size());
+    }
+
+    @Test
+    public void getShortestPath_A_C() {
+        routeMap.setStartStation(A);
+        routeMap.calculatePath();
+        String path = routeMap.getShortestPath(A, C);
+        //Assert.assertEquals("", path);
+    }
+
+    @Test
+    public void getShortestPath_B_B() {
+        routeMap.setStartStation(B);
+        routeMap.calculatePath();
+        String path = routeMap.getShortestPath(B, B);
+        //Assert.assertEquals("", path);
     }
 
     private void dataset1() {
-        routeMap.addDistance(A, B, 5);
-        routeMap.addDistance(A, D, 5);
-        routeMap.addDistance(A, E, 7);
-        //routeMap.addDistance(E, A, 7);
-        routeMap.addDistance(B, C, 4);
-        routeMap.addDistance(C, D, 8);
-        routeMap.addDistance(D, C, 8);
-        routeMap.addDistance(C, E, 2);
-        routeMap.addDistance(D, E, 6);
-        routeMap.addDistance(E, B, 3);
+        try {
+            routeMap.addDistance(A, B, 5);
+            routeMap.addDistance(A, D, 5);
+            routeMap.addDistance(A, E, 7);
+            //routeMap.addDistance(E, A, 7);
+            routeMap.addDistance(B, C, 4);
+            routeMap.addDistance(C, D, 8);
+            routeMap.addDistance(D, C, 8);
+            routeMap.addDistance(C, E, 2);
+            routeMap.addDistance(D, E, 6);
+            routeMap.addDistance(E, B, 3);
+        } catch (TrainRouteException te) {
+            Assert.fail(te.getErrorMessage());
+        }
     }
 
 }

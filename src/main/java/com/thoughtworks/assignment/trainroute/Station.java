@@ -1,7 +1,14 @@
 package com.thoughtworks.assignment.trainroute;
 
-import java.lang.Boolean;import java.lang.String; /**
- * Created by anshumandutta on 10/13/15.
+import java.lang.Boolean;import java.lang.String;
+
+/**
+ * This class represent a station or node in the Route graph.
+ * NOte two stations cannot have the same label.
+ *
+ * @author anshumandutta
+ * @version 1.0
+ * @since 10/13/15
  */
 public class Station {
     private String label;

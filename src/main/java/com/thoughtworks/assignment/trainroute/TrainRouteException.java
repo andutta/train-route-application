@@ -1,7 +1,14 @@
 package com.thoughtworks.assignment.trainroute;
 
 /**
- * Created by adutta on 10/20/15.
+ * This class is a used for throwing any exception in the
+ * @see com.thoughtworks.assignment.trainroute.RouteMap methods.
+ * A new error message and error number can be passed in to the
+ * consutructor to represent an exception uniquely
+ *
+ * @author anshumandutta
+ * @version 1.0
+ * @since 10/13/15
  */
 public class TrainRouteException extends Exception {
     private String errorMessage;
