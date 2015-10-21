@@ -31,7 +31,7 @@ public class Station {
         this.wasVisited = wasVisited;
     }
 
-    protected Station(String label, int indexNo) {
+    public Station(String label, int indexNo) {
         this.label = label;
         this.indexNo = indexNo;
         this.wasVisited = Boolean.FALSE;
