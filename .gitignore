@@ -12,6 +12,6 @@ classes
 build
 
 #idea related files
-editorial-module.iml
-editorial-module.ipr
-editorial-module.iws
+*.iml
+*.ipr
+*.iws
