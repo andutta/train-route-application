@@ -14,6 +14,7 @@ Application can also calculate number of stops between two given stations.
 - This application assumes you IDE is able to compile and run gradle projects.
 - Class RouteMap is not tested in a multi-thread environment, since the class hold state in various 
 data structure it may not be thread-safe
+- TrainRouteException is thrown for all the custom error with unique error number for differentiation 
 
 ### How to run
 - ./gradlew clean build test
