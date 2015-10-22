@@ -1,5 +1,8 @@
 package com.thoughtworks.assignment.trainroute;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.lang.Boolean;
 import java.lang.String;
 import java.util.*;
@@ -38,6 +41,15 @@ public class RouteMap {
      */
     public void setStartStation(Station startStation) {
         this.startStation = startStation;
+        initVisits();
+    }
+
+    /**
+     * Getter method to see all the entered edges
+     * @return
+     */
+    public int[][] getAdjMatrix() {
+        return adjMatrix;
     }
 
     /**
@@ -56,6 +68,40 @@ public class RouteMap {
             stationCount++;
         }
         initRouteMap();
+    }
+
+    public RouteMap(FileReader datFile) throws IOException, TrainRouteException{
+        initRouteMap();
+        BufferedReader bufferedReader = new BufferedReader(datFile);
+        String line;
+        int lineNo = 0;
+        int noOfStations = 0;
+        while ((line = bufferedReader.readLine()) != null) {
+            String[] fileData = line.split(",");
+
+            if (fileData.length > 0) {
+
+                if (lineNo == 0) { // first line is station name
+                    noOfStations = fileData.length;
+                    stationList = new ArrayList<Station>();
+                    for (int i = 0; i < fileData.length; i++) {
+                        Station s = new Station(fileData[i]);
+                        s.setIndexNo(i);
+                        stationList.add(s);
+                        stationCount++;
+                    }
+                    initRouteMap();
+                } else {
+                    if (fileData.length != noOfStations) {
+                        throw new TrainRouteException("No of station mismatch to distance", 21006);
+                    }
+                    for(int i=0;i<fileData.length;i++) {
+                        adjMatrix[lineNo-1][i] = Integer.parseInt(fileData[i]);
+                    }
+                }
+            }
+            lineNo++;
+        }
     }
 
     /**
@@ -182,6 +228,15 @@ public class RouteMap {
     }
 
     /**
+     * This method returns the shortest path between two stations
+     * @param sourceIndex Source station index no
+     * @param destIndex Destination station index no
+     * @return A String of station labels followng the shortest path. e.g. A->B->C->#9
+     */
+    public String getShortestPath(int sourceIndex, int destIndex) {
+        return this.getShortestPath(stationList.get(sourceIndex), stationList.get(destIndex));
+    }
+    /**
      * This method returns the shortest path between two stations.
      * Method uses a Hashmap that is already populated with calculated
      * shortest path for each vertices.
@@ -195,7 +250,7 @@ public class RouteMap {
      *
      * @param source Source Station
      * @param dest Destination Station
-     * @return A String of station labels followng the shortest path.
+     * @return A String of station labels followng the shortest path. e.g. A->B->C->#9
      */
     public String getShortestPath(Station source, Station dest) {
         Stack<Station> stationStack = new Stack<Station>();
@@ -360,6 +415,18 @@ public class RouteMap {
                 adjMatrix[i][j] = 0;
             }
         }
+
+        //Reset all visited station
+        if (stationList != null) {
+            for (Station s : stationList) {
+                s.setWasVisited(Boolean.FALSE);
+            }
+        }
+    }
+
+    private void initVisits() {
+        visits = new HashMap<String, Visit>();
+        q = new LinkedList<Station>();
 
         //Reset all visited station
         for (Station s:stationList) {
