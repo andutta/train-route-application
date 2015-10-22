@@ -46,7 +46,7 @@ public class Station {
         return indexNo;
     }
 
-    protected void setIndexNo(int indexNo) {
+    public void setIndexNo(int indexNo) {
         this.indexNo = indexNo;
     }
 
