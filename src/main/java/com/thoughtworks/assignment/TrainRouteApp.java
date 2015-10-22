@@ -32,7 +32,6 @@ public class TrainRouteApp {
             routeMap.addDistance(A, B, 5);
             routeMap.addDistance(A, D, 5);
             routeMap.addDistance(A, E, 7);
-            routeMap.addDistance(E, A, 7);
             routeMap.addDistance(B, C, 4);
             routeMap.addDistance(C, D, 8);
             routeMap.addDistance(D, C, 8);
