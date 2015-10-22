@@ -369,6 +369,12 @@ public class RouteMap {
         return retList;
     }
 
+    /**
+     * This private method adds the childvertices/stations to a queue and
+     * also returns the minimum index vertex/station.
+     * @param source Parent station
+     * @return station index that is shortest among all the immediate child stations
+     */
     private int getMinNode(Station source) {
         int retIndex = -1;
         if (source.getWasVisited()) {
@@ -388,6 +394,13 @@ public class RouteMap {
         return retIndex;
     }
 
+    /**
+     * This private method adds all the stops from source stations to destination stations
+     * until destination station is reached
+     * @param stationStops
+     * @param currStation
+     * @param dest
+     */
     private void isDestinationFound(List<Station> stationStops, Station currStation, Station dest) {
         stationStops.add(currStation);
         if(currStation.equals(dest)) {
@@ -404,6 +417,11 @@ public class RouteMap {
         }
     }
 
+    /**
+     * This private method initializes all the data structures used by
+     * this class in storing stations and their relative distances and
+     * calculating shortest route.
+     */
     private void initRouteMap() {
         visits = new HashMap<String, Visit>();
         q = new LinkedList<Station>();
@@ -424,6 +442,10 @@ public class RouteMap {
         }
     }
 
+    /**
+     * This private method also resets data structure that
+     * are used in shortest path calculation.
+     */
     private void initVisits() {
         visits = new HashMap<String, Visit>();
         q = new LinkedList<Station>();

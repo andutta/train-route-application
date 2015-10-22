@@ -44,7 +44,7 @@ public class TrainRouteApp {
             stations.add(A);
             stations.add(B);
             stations.add(C);
-            logStmt("----------------- Assignment test result -------------------");
+            logStmt("----------------- Assignment test start -------------------");
             logStmt("1. The distance of the route A-B-C.");
             logStmt("Result - " + routeMap.tripDistance(stations));
             stations = null;
