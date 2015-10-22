@@ -16,8 +16,8 @@ Application can also calculate number of stops between two given stations.
 data structure it may not be thread-safe
 
 ### How to run
-./gradlew clean build test
-java -jar ./build/libs/train-route-app-1.0.jar
+- ./gradlew clean build test
+- java -jar ./build/libs/train-route-app-1.0.jar
 
 
 
