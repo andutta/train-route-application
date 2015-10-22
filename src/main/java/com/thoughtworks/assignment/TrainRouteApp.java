@@ -16,37 +16,29 @@ public class TrainRouteApp {
 
     public static void main(String[] args) {
 
-        if (args.length > 0) {
-            System.out.println(args[0]);
-        }
-
         Station A = new Station("A",0);
         Station B = new Station("B",1);
         Station C = new Station("C",2);
         Station D = new Station("D",3);
         Station E = new Station("E",4);
         //stationList.add(A);stationList.add(B);stationList.add(C);stationList.add(D);stationList.add(E);
-        RouteMap routeMap;
+        List<Station> stationList = new ArrayList<Station>();
+        stationList.add(A);stationList.add(B);stationList.add(C);stationList.add(D);stationList.add(E);
+        RouteMap routeMap = new RouteMap(stationList);
 
-        //Prepare data set
         try {
-            List<Station> stationList = new ArrayList<Station>();
-            if (args.length > 0) {
-                routeMap = new RouteMap(new FileReader(args[0]));
-            } else {
-                stationList.add(A);stationList.add(B);stationList.add(C);stationList.add(D);stationList.add(E);
-                routeMap = new RouteMap(stationList);
-                routeMap.addDistance(A, B, 5);
-                routeMap.addDistance(A, D, 5);
-                routeMap.addDistance(A, E, 7);
-                //routeMap.addDistance(E, A, 7);
-                routeMap.addDistance(B, C, 4);
-                routeMap.addDistance(C, D, 8);
-                routeMap.addDistance(D, C, 8);
-                routeMap.addDistance(C, E, 2);
-                routeMap.addDistance(D, E, 6);
-                routeMap.addDistance(E, B, 3);
-            }
+
+            //Prepare data set
+            routeMap.addDistance(A, B, 5);
+            routeMap.addDistance(A, D, 5);
+            routeMap.addDistance(A, E, 7);
+            //routeMap.addDistance(E, A, 7);
+            routeMap.addDistance(B, C, 4);
+            routeMap.addDistance(C, D, 8);
+            routeMap.addDistance(D, C, 8);
+            routeMap.addDistance(C, E, 2);
+            routeMap.addDistance(D, E, 6);
+            routeMap.addDistance(E, B, 3);
 
             List<Station> stations = new ArrayList<Station>();
             stations.add(A);
@@ -116,21 +108,6 @@ public class TrainRouteApp {
                     "** CDC and CEBC are valid values, I am not sure how would the rest of it qualify for a valid path, considering C is already reached after B");
             logStmt("----------------- Assignment Tests done -------------------");
 
-
-            //Resetting source to station A
-            routeMap.setStartStation(A);
-            routeMap.calculatePath();
-
-            String prompt = "Y";
-            Scanner  keyboard = new Scanner(System.in);
-            logStmt("----------------- Get Shortest Path -------------------");
-            while (prompt.equals("Y")) {
-                logStmt("Want to Continue Y/N ?");
-                prompt = keyboard.next();
-                logStmt("Enter numeric value for Destination Station A=0,B=1,C=2,D=3,E=4 (source is assumed to be A)");
-                int destStation = keyboard.nextInt();
-                logStmt("Shortest path = " + routeMap.getShortestPath(0, destStation));
-            }
 
         } catch (Exception te) {
             //Doing nothing

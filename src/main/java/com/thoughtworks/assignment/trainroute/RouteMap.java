@@ -40,7 +40,7 @@ public class RouteMap {
      * @param startStation instance of start station object
      */
     public void setStartStation(Station startStation) {
-        this.startStation = getStationInstance(startStation);
+        this.startStation = startStation;
         initVisits();
     }
 
@@ -432,16 +432,6 @@ public class RouteMap {
         for (Station s:stationList) {
             s.setWasVisited(Boolean.FALSE);
         }
-    }
-
-    private Station getStationInstance(Station s) {
-        for(Station station:stationList) {
-            if (s.getLabel().equals(station)) {
-                return station;
-            }
-        }
-
-        return null;
     }
 
 }
