@@ -227,6 +227,25 @@ public class RouteMap {
         }
     }
 
+    public String getShortestPath(String sourceLabel, String destLabel) {
+        Station fromStation=null;
+        Station toStation=null;
+        for (Station s:stationList) {
+            if (sourceLabel.equals(s.getLabel())) {
+                fromStation = s;
+            }
+            if(destLabel.equals(s.getLabel())) {
+                toStation = s;
+            }
+
+            if (fromStation != null && toStation != null) {
+                break;
+            }
+        }
+
+        return getShortestPath(fromStation, toStation);
+    }
+
     /**
      * This method returns the shortest path between two stations
      * @param sourceIndex Source station index no
