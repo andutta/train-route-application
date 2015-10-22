@@ -45,6 +45,6 @@ Next prompted for -
 
 **Want to check another one ?** Y/N - Press Y to check another route, N to get out
 
-Next Prompt 
+Next Prompt -
 
 **Want to continue Y/N?** - Enter Y if you want to go through all of the above, N to exit program
