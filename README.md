@@ -18,7 +18,34 @@ data structure it may not be thread-safe
 
 ### How to run
 - ./gradlew clean build test
-- java -jar ./build/libs/train-route-app-1.0.jar
+- java -jar ./build/libs/train-route-app-1.0.jar 
 
+Will prompted for -
 
+**[R]un assignment ? (Press R to run any other key to skip)** - Enter R, if you want to see the assignment result.
 
+Next prompted for -
+
+**[L]oad data from file ? (Press L to load any other key to skip)** - Enter L, if you want to load data from a file, sample file is available in the source code in src/main/resources/routemap.dat
+
+Next prompted for - 
+
+**Filename with path ?** Enter a file name e.g. src/main/resources/routemap.dat
+
+Next prompted for -
+
+**Get shortest path for station, enter From station label** - Enter your source station, it must be first one as per your data.
+
+Next prompted for -
+
+**Get shortest path for station, enter To station label** - Enter your to station label from your data file
+
+Next it shows the result
+
+Next prompted for -
+
+**Want to check another one ?** Y/N - Press Y to check another route, N to get out
+
+Next Prompt 
+
+**Want to continue Y/N?** - Enter Y if you want to go through all of the above, N to exit program
