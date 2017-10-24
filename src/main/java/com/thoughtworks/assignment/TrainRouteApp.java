@@ -16,6 +16,7 @@ import java.util.Scanner;
  * This class is the main class to launch Train-route-app.
  * Provides basic user interaction by prompting for some
  * keyboard response.
+ * Uses simple algorithm to calculate shortest distance
  *
  * @author anshumandutta
  * @version 1.0
